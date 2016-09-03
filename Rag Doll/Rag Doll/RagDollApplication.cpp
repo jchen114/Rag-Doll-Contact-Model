@@ -5,6 +5,8 @@
 #include "State.h"	
 #include "Gains.h"
 
+#include <SOIL\src\SOIL.h>
+
 #include <iostream>
 
 using namespace std::placeholders;
@@ -75,6 +77,8 @@ void RagDollApplication::InitializePhysics() {
 
 	m_pWorld->setGravity(btVector3(0.0f, SCALING_FACTOR * -9.81f,0.0f));
 
+	LoadTextures();
+
 	// Create ground
 	CreateGround(GROUND_POSITION);
 
@@ -114,6 +118,22 @@ void RagDollApplication::InitializePhysics() {
 
 void RagDollApplication::Idle() {
 	BulletOpenGLApplication::Idle();
+}
+
+void RagDollApplication::LoadTextures() {
+	// Load up the textures
+	m_ground_texture = SOIL_load_OGL_texture
+		(
+		"..\\..\\Dependencies\\Resources\\checkerboard.png",
+		SOIL_LOAD_AUTO,
+		SOIL_CREATE_NEW_ID,
+		SOIL_FLAG_MIPMAPS | SOIL_FLAG_TEXTURE_REPEATS | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+		);
+
+	if (0 == m_ground_texture)
+	{
+		printf("SOIL loading error: '%s'\n", SOIL_last_result());
+	}
 }
 
 void RagDollApplication::Keyboard(unsigned char key, int x, int y) {
@@ -170,15 +190,9 @@ void RagDollApplication::CreateGround(const btVector3 &position) {
 	float mass = 0.0f;
 	m_ground = Create3DBox(ground, mass, GetRandomColor(), position);
 	m_ground->GetRigidBody()->setCollisionFlags(m_ground->GetRigidBody()->getCollisionFlags());
+	m_ground->GetShape()->setUserPointer(m_ground);
 
-	// Create markers.
-	for (int marker = 0; marker < GROUND_WIDTH; marker += MARKER_DISTANCE) {
-		// Position for marker
-		btVector3 pos(marker - (GROUND_WIDTH / 2 - MARKER_WIDTH/2), position.getY() + (GROUND_HEIGHT/2 + MARKER_HEIGHT/2), 0);
-		GameObject *box = Create2DBox(btVector3(MARKER_WIDTH / 2, MARKER_HEIGHT / 2, 0), 0, MARKER_COLOR, pos);
-		// Create fixed constraint
-		AddFixedConstraint(box, m_ground);
-	}
+	// Create some bumps every so often.
 
 }
 
@@ -272,8 +286,8 @@ void RagDollApplication::RagDollCollision(btScalar timestep) {
 void RagDollApplication::ConfigureContactModel() {
 	
 	m_pWorld->getPairCache()->setOverlapFilterCallback(ContactManager::GetInstance().GetFilterCallback());
-	ContactManager::GetInstance().AddObjectForCollision(m_rightFoot);
-	ContactManager::GetInstance().AddObjectForCollision(m_leftFoot);
+	ContactManager::GetInstance().AddObjectForCollision(m_rightFoot, 6);
+	ContactManager::GetInstance().AddObjectForCollision(m_leftFoot, 6);
 
 	ContactManager::GetInstance().AddObjectToCollideWith(m_ground);
 
@@ -1104,7 +1118,37 @@ void RagDollApplication::DrawShape(btScalar *transform, const btCollisionShape *
 	ContactManager::GetInstance().DrawContactPoints();
 
 	// Special rendering
-	if (pShape->getUserPointer() == m_torso) {
+	if (pShape->getUserPointer() == m_ground) {
+		
+		// Transform to location
+		const btBoxShape *box = static_cast<const btBoxShape*>(pShape);
+		btVector3 halfSize = box->getHalfExtentsWithMargin();
+
+		glColor3f(color.x(), color.y(), color.z());
+
+		// push the matrix stack
+		glPushMatrix();
+		glMultMatrixf(transform);
+
+		// BulletOpenGLApplication::DrawShape(transform, shape, color);
+		glMatrixMode(GL_MODELVIEW);
+
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, m_ground_texture);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+
+		glBegin(GL_QUADS);
+		glTexCoord2d(0.0, 0.0);								glVertex3f(-halfSize.x(), -halfSize.y(), -halfSize.z());
+		glTexCoord2d(0.0, halfSize.y() * 10);				glVertex3f(-halfSize.x(), halfSize.y(), -halfSize.z());
+		glTexCoord2d(halfSize.x() * 10, halfSize.y() * 10);	glVertex3f(halfSize.x(), halfSize.y(), -halfSize.z());
+		glTexCoord2d(halfSize.x() * 10, 0.0f);				glVertex3f(halfSize.x(), -halfSize.y(), -halfSize.z());
+		glEnd();
+
+		glDisable(GL_TEXTURE_2D);
+		glPopMatrix();
+
+
+	} else if (pShape->getUserPointer() == m_torso) {
 		const btBoxShape *box = static_cast<const btBoxShape*>(pShape);
 		btVector3 halfSize = box->getHalfExtentsWithMargin();
 

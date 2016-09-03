@@ -8,6 +8,8 @@ class WalkingController;
 class State;
 class Gains;
 
+#define BUMP_HEIGHT 0.05
+
 class RagDollApplication :
 	public BulletOpenGLApplication
 {
@@ -22,6 +24,9 @@ public:
 	virtual void Keyboard(unsigned char key, int x, int y) override;
 	virtual void KeyboardUp(unsigned char key, int x, int y) override;
 	virtual void DrawShape(btScalar *transform, const btCollisionShape *pShape, const btVector3 &color) override;
+
+	void LoadTextures();
+
 	void DrawTorso(const btVector3 &halfSize);
 	void DrawUpperLeg(const btVector3 &halfSize);
 	void DrawLowerLeg(const btVector3 &halfSize);
@@ -93,6 +98,8 @@ public:
 	State *GetState(int state);
 
 private:
+
+	GLuint m_ground_texture;
 
 	void DrawDebugFeedback();
 

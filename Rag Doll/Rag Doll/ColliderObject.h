@@ -17,7 +17,7 @@ class CollideeObject;
 class ColliderObject
 {
 public:
-	ColliderObject(GameObject *object);
+	ColliderObject(GameObject *object, int numberOfVertices = 2);
 	~ColliderObject();
 
 	ColliderType m_colliderType;
@@ -31,11 +31,11 @@ public:
 
 	void CollisionDetectionUpdate(std::vector<CollideeObject> collidees);
 
-	std::vector<ColliderVertex *> GetVertexPositionsFor2DBox(const btVector3 &halfSize);
+	std::vector<ColliderVertex *> GetVertexPositionsFor2DBox(const btVector3 &halfSize, int numberOfVertices);
 	std::vector<btVector3> GetVertexVelocitiesFor2DBox(btRigidBody *body, const btVector3 &halfSize);
 
 private:
-	void Initialize2DBox();
+	void Initialize2DBox(int numberOfVertices);
 	
 };
 

@@ -63,8 +63,8 @@ void CameraManager::SetupOrthographicCamera() {
 		Constants::GetInstance().GetScreenWidth() / 2,
 		-Constants::GetInstance().GetScreenHeight() / 2,
 		Constants::GetInstance().GetScreenHeight() / 2,
-		-1,
-		1
+		-100,
+		100
 		);
 	SetupOrthographicModelView();
 }

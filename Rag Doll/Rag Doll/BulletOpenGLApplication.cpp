@@ -10,7 +10,7 @@ BulletOpenGLApplication::BulletOpenGLApplication()
 	// Create Camera manager
 	m_cameraManager = new CameraManager(
 		btVector3(0.0f, 0.0f, 0.0f),	// Target
-		SCALING_FACTOR / 4.0f,							// Distance
+		SCALING_FACTOR / 4.0f,			// Distance
 		20.0f,							// Pitch
 		0.0f,							// Yaw
 		btVector3(0.0f, 1.0f, 0.0f),	// Up Vector

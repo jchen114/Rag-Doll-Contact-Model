@@ -18,6 +18,9 @@
     <Filter Include="Contact">
       <UniqueIdentifier>{81b56579-dde6-4723-a9d9-db8bd24260f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{fe5cfb84-040b-463f-b340-c4ba871b1338}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -74,6 +77,9 @@
     <ClInclude Include="ContactManager.h">
       <Filter>Contact</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -124,5 +130,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Rag Doll.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\Dependencies\Resources\checkerboard.png">
+      <Filter>Resources</Filter>
+    </Image>
   </ItemGroup>
 </Project>

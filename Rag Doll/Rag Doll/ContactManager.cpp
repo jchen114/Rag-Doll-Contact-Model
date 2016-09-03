@@ -25,11 +25,11 @@ btOverlapFilterCallback *ContactManager::GetFilterCallback() {
 
 #pragma region CONTACT_INTERFACE
 
-void ContactManager::AddObjectForCollision(GameObject *object) {
+void ContactManager::AddObjectForCollision(GameObject *object, int numberOfVertices) {
 	
 	m_beingUsed = true;
 
-	ColliderObject colliderObject(object);
+	ColliderObject colliderObject(object, numberOfVertices);
 	m_forCollision.insert({ object, colliderObject });
 }
 

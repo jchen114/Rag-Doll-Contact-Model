@@ -20,8 +20,8 @@ public:
 
 	void CollisionDetectionUpdate(std::vector<CollideeObject> objects);
 
-	btScalar m_springConstant = 700.0f;
-	btScalar m_dampingConstant = 70.0f;
+	btScalar m_springConstant = 250.0f;
+	btScalar m_dampingConstant = 25.0f;
 	btScalar m_friction;
 	int m_id;
 
