@@ -35,6 +35,7 @@ public:
 	virtual void Idle() override;
 
 	void CreateGround(const btVector3 &position);
+	void CreateBumps(const btVector3 &begin, const btVector3 &end);
 	void CreateRagDoll(const btVector3 &position);
 	void ConfigureContactModel();
 	void AddHinges();
